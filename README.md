@@ -26,7 +26,8 @@ module.exports = {
       bucket: "阿里云 bucket",
       customPath: "自定义的路径，非必填",
       timeout: "超时时间，默认为60000ms，非必填",
-      folderPath: 'assets/**/**.*'  // 静态文件位置，和筛选
+      folderPath: 'assets/**/**.*',  // 静态文件位置，和筛选
+      isClean: false  // 清除目标文件，默认为 false
     })]
   }
 }
