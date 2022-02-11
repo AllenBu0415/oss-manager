@@ -13,6 +13,7 @@ interface Options {
   folderPath: string // 目标文件夹的路径
   customPath?: string // 自定义路径
   timeout?: string // 超时时间
+  isClean?: boolean // 清空目标文件夹
 }
 
 interface OssFile {
@@ -23,8 +24,12 @@ interface OssFile {
 class OssManager {
   private _options: Options
 
+  private client: oss
+
   constructor(options: Options) {
     this._options = options
+
+    this.client = this.initOSS()
   }
 
   apply(compiler: any) {
@@ -45,11 +50,9 @@ class OssManager {
 
               spinner.start('Upload file ......')
 
-              let client: oss = this.initOSS()
-
               Promise.all(
                 fileList.map((item: any) => {
-                  return client.put(
+                  return this.client.put(
                     `${this._options.customPath != undefined ? this._options.customPath : ''}/${path.relative(
                       output,
                       item.path
@@ -68,7 +71,7 @@ class OssManager {
                 })
 
               // 是否需要清除目标文件
-              if (false) {
+              if (this._options.isClean) {
                 this.clearTarget(compilation.outputOptions.path).then(resolve).catch(reject)
               } else {
                 resolve()
